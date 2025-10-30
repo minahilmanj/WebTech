@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (buyNowBtn) {
     buyNowBtn.addEventListener("click", (e) => {
-      e.preventDefault(); // prevent default anchor action
+      e.preventDefault(); 
             window.location.href = "checkout.html";
     });
   } else {

@@ -1,4 +1,4 @@
-/* --- Base and Reset --- */
+
 :root {
     --primary-color: #799a27; 
     --secondary-color: #333;
@@ -70,7 +70,7 @@ h1, h2, h3, h4, h5 {
     color: var(--text-light);
 }
 
-/* --- Header & Navigation --- */
+/* --- Header --- */
 .main-header {
     background-color: black;
     color: var(--text-light);
@@ -243,7 +243,7 @@ h1, h2, h3, h4, h5 {
     color: red;
 }
 
-/* --- Parallax / Quote Section --- */
+
 .parallax-quote-section {
     background: url('https://themes.muffingroup.com/be/agro/wp-content/uploads/2021/07/home_agro_parallax_background.jpg') no-repeat center center/cover;
     background-attachment: fixed;
@@ -277,7 +277,7 @@ h1, h2, h3, h4, h5 {
     font-weight: 300;
 }
 
-/* --- FAQ/Accordion Section --- */
+
 
 .paraq{
     font-size: 30px;
@@ -374,16 +374,6 @@ h1, h2, h3, h4, h5 {
   background-color: darkred;
   transform: scale(1.05);
 }
-
-
-/* .icon-placeholder {
-    height: 40px;
-    width: 40px;
-    background-color:red;
-    margin: 0 auto;
-    line-height: 40px;
-    font-size: 0.8em;
-} */
 
 /* --- Footer --- */
 .main-footer {

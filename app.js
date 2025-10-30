@@ -3,7 +3,7 @@ $(document).ready(function () {
   const apiURL = "https://jsonplaceholder.typicode.com/posts";
   const postModal = new bootstrap.Modal(document.getElementById("postModal"));
 
-  // Load Posts
+  
   function loadPosts() {
     $("#loading").show();
     $.get(apiURL, function (posts) {
