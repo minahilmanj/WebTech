@@ -1,6 +1,6 @@
 // checkout-validation.js
 $(document).ready(function () {
-  // Find the checkout form (non-intrusive: use the .needs-validation form)
+  // Find the checkout form 
   var $form = $("form.needs-validation").first();
 
   // If no id, give a predictable id so debugging is easier (doesn't change HTML file)
