@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: Arial; background: #f4f4f4; }
+        nav { background: #222; padding: 10px; }
+        nav a { color: white; margin-right: 15px; text-decoration: none; }
+        .container { padding: 20px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/products">Products</a>
+    <a href="/">Main Site</a>
+</nav>
+
+<div class="container">
+    <%- body %>
+</div>
+
+</body>
+</html>

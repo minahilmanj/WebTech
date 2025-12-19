@@ -1,0 +1,33 @@
+<!-- views/products.ejs -->
+<h1>Products</h1>
+
+<form method="GET" action="/product">
+  <input type="text" name="category" placeholder="Category" value="<%= query.category || '' %>">
+  <input type="number" name="minPrice" placeholder="Min Price" value="<%= query.minPrice || '' %>">
+  <input type="number" name="maxPrice" placeholder="Max Price" value="<%= query.maxPrice || '' %>">
+  <button type="submit">Filter</button>
+</form>
+
+<ul>
+  <% products.forEach(product => { %>
+    <li>
+      <img src="<%= product.image %>" width="100">
+      <h3><%= product.name %></h3>
+      <p>Category: <%= product.category %></p>
+      <p>Price: $<%= product.price %></p>
+      <p><%= product.description %></p>
+    </li>
+  <% }) %>
+</ul>
+
+<div>
+  <% if (currentPage > 1) { %>
+    <a href="?<%= new URLSearchParams({ ...query, page: currentPage - 1 }).toString() %>">Prev</a>
+  <% } %>
+
+  Page <%= currentPage %> of <%= totalPages %>
+
+  <% if (currentPage < totalPages) { %>
+    <a href="?<%= new URLSearchParams({ ...query, page: currentPage + 1 }).toString() %>">Next</a>
+  <% } %>
+</div>

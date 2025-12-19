@@ -1,90 +1,36 @@
-$(document).ready(function () {
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
 
-  const apiURL = "https://jsonplaceholder.typicode.com/posts";
-  const postModal = new bootstrap.Modal(document.getElementById("postModal"));
+// Connect MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/agroDB')
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
 
-  // Load Posts
-  function loadPosts() {
-    $("#loading").show();
-    $.get(apiURL, function (posts) {
-      $("#loading").hide();
+    
+    require('./db'); // 🔹 MongoDB connection
+    const Product = require('./models/product');
 
-      let rows = "";
-      posts.slice(0, 10).forEach(post => {
-        rows += `
-          <tr>
-            <td>${post.id}</td>
-            <td>${post.title}</td>
-            <td>${post.body}</td>
-            <td>
-              <button class='btn btn-warning btn-sm editBtn' data-id='${post.id}' data-title='${post.title}' data-body='${post.body}'>Edit</button>
-              <button class='btn btn-danger btn-sm deleteBtn' data-id='${post.id}'>Delete</button>
-            </td>
-          </tr>`;
-      });
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
-      $("#postTable").html(rows);
-    });
-  }
+app.use(express.static('public')); // for images, css, etc.
 
-  loadPosts();
+// Correct route mounting
+const productRoutes = require('./routes/products');
+app.use('/products', productRoutes); // <-- use plural
 
-  // Add Post button
-  $("#addPostBtn").click(() => {
-    $("#postId").val("");
-    $("#postForm")[0].reset();
-    postModal.show();
-  });
+app.get('/dashboard', async (req, res) => {
+    const products = await Product.find(); // FETCH FROM MONGODB
+    res.render('admin/dashboard', { products });
+});
 
-  // Save Post (Create / Update)
-  $("#postForm").submit(function (e) {
-    e.preventDefault();
+app.get('/productedit', async (req, res) => {
+    const products = await Product.find(); // FETCH FROM MONGODB
+    res.render('admin/productedit', { products });
+});
 
-    let id = $("#postId").val();
-    let data = { title: $("#title").val(), body: $("#body").val() };
 
-    if (id) {
-      $.ajax({
-        url: `${apiURL}/${id}`,
-        method: "PUT",
-        data,
-        success: function () {
-          alert("Post updated successfully!");
-          postModal.hide();
-          loadPosts();
-        }
-      });
-    } else {
-      $.post(apiURL, data, function () {
-        alert("Post added successfully!");
-        postModal.hide();
-        loadPosts();
-      });
-    }
-  });
-
-  // Edit button click
-  $(document).on("click", ".editBtn", function () {
-    $("#postId").val($(this).data("id"));
-    $("#title").val($(this).data("title"));
-    $("#body").val($(this).data("body"));
-    postModal.show();
-  });
-
-  // Delete Post
-  $(document).on("click", ".deleteBtn", function () {
-    let id = $(this).data("id");
-
-    if (confirm("Are you sure you want to delete?")) {
-      $.ajax({
-        url: `${apiURL}/${id}`,
-        method: "DELETE",
-        success: function () {
-          alert("Post deleted!");
-          loadPosts();
-        }
-      });
-    }
-  });
-
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
 });

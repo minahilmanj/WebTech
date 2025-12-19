@@ -1,0 +1,10 @@
+<h1>Edit Product</h1>
+
+<form method="POST" action="/products/<%= product._id %>">
+    <input name="name" value="<%= product.name %>" required><br>
+    <input name="price" type="number" value="<%= product.price %>"><br>
+    <input name="category" value="<%= product.category %>"><br>
+    <input name="image" value="<%= product.image %>"><br>
+    <textarea name="description"><%= product.description %></textarea><br>
+    <button>Update</button>
+</form>

@@ -1,90 +1,56 @@
-$(document).ready(function () {
+const express = require('express');
+const path = require('path');
+const app = express();
 
-  const apiURL = "https://jsonplaceholder.typicode.com/posts";
-  const postModal = new bootstrap.Modal(document.getElementById("postModal"));
+require('./db'); // 🔹 MongoDB connection
+const Product = require('./models/product');
 
-  
-  function loadPosts() {
-    $("#loading").show();
-    $.get(apiURL, function (posts) {
-      $("#loading").hide();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-      let rows = "";
-      posts.slice(0, 10).forEach(post => {
-        rows += `
-          <tr>
-            <td>${post.id}</td>
-            <td>${post.title}</td>
-            <td>${post.body}</td>
-            <td>
-              <button class='btn btn-warning btn-sm editBtn' data-id='${post.id}' data-title='${post.title}' data-body='${post.body}'>Edit</button>
-              <button class='btn btn-danger btn-sm deleteBtn' data-id='${post.id}'>Delete</button>
-            </td>
-          </tr>`;
-      });
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-      $("#postTable").html(rows);
-    });
-  }
+// 🔹 Landing page with products
+app.get('/', async (req, res) => {
+    const products = await Product.find(); // FETCH FROM MONGODB
+    res.render('pages/LandingPage', { products });
+});
 
-  loadPosts();
+app.get('/products', async (req, res) => {
+    const products = await Product.find(); // FETCH FROM MONGODB
+    res.render('admin/products', { products });
+});
 
-  // Add Post button
-  $("#addPostBtn").click(() => {
-    $("#postId").val("");
-    $("#postForm")[0].reset();
-    postModal.show();
-  });
+app.get('/checkout', (req, res) => 
+    res.render('pages/BootstrapCheckout')
+);
 
-  // Save Post (Create / Update)
-  $("#postForm").submit(function (e) {
-    e.preventDefault();
+app.get('/add-product', (req, res) => 
+    res.render('admin/add-product')
+);
+app.listen(3000, () =>
+    console.log('Server running on http://localhost:3000')
+);
 
-    let id = $("#postId").val();
-    let data = { title: $("#title").val(), body: $("#body").val() };
 
-    if (id) {
-      $.ajax({
-        url: `${apiURL}/${id}`,
-        method: "PUT",
-        data,
-        success: function () {
-          alert("Post updated successfully!");
-          postModal.hide();
-          loadPosts();
-        }
-      });
-    } else {
-      $.post(apiURL, data, function () {
-        alert("Post added successfully!");
-        postModal.hide();
-        loadPosts();
-      });
-    }
-  });
+// Correct route mounting
+const productRoutes = require('./routes/products');
+app.use('/products', productRoutes); // <-- use plural
 
-  // Edit button click
-  $(document).on("click", ".editBtn", function () {
-    $("#postId").val($(this).data("id"));
-    $("#title").val($(this).data("title"));
-    $("#body").val($(this).data("body"));
-    postModal.show();
-  });
+app.get('/dashboard', async (req, res) => {
+    const products = await Product.find(); // FETCH FROM MONGODB
+    const count = products.length;
+    res.render('admin/dashboard', { count });
+});
 
-  // Delete Post
-  $(document).on("click", ".deleteBtn", function () {
-    let id = $(this).data("id");
+app.get('/productedit', async (req, res) => {
+    const products = await Product.find(); // FETCH FROM MONGODB
+    res.render('admin/productedit', { products });
+});
 
-    if (confirm("Are you sure you want to delete?")) {
-      $.ajax({
-        url: `${apiURL}/${id}`,
-        method: "DELETE",
-        success: function () {
-          alert("Post deleted!");
-          loadPosts();
-        }
-      });
-    }
-  });
 
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
 });
