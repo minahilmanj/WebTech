@@ -12,6 +12,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+const checkoutRoutes = require('./lab-final/routes/checkout');
+app.use('/checkout', checkoutRoutes);
+
+
+
 // 🔹 Landing page with products
 app.get('/', async (req, res) => {
     const products = await Product.find(); // FETCH FROM MONGODB
@@ -49,6 +54,7 @@ app.get('/productedit', async (req, res) => {
     const products = await Product.find(); // FETCH FROM MONGODB
     res.render('admin/productedit', { products });
 });
+
 
 
 app.listen(3000, () => {
